@@ -18,74 +18,112 @@ A **Python-based voice-activated SOS system** that:
 - 📍 Gets the latest latitude and longitude
 - 🗺️ Generates a Google Maps location link
 - 🚨 Creates an emergency message
-- 💻 Prints the message in the terminal
+- 💻 Prints the emergency message in the terminal
 
-**Current Prototype:**  
-Simulated GPS coordinates are used because a physical GPS module was not available.
+> **Current Prototype:** Simulated GPS coordinates are used because a physical
+> GPS module was not available.
 
-In the future, the simulated coordinates can be replaced with a real GPS module.
+> In the future, the simulated coordinates can be replaced with a real GPS
+> module.
 
 ---
 
 ## 🔄 Project Workflow
 
 ```text
-                    👤 USER
-                       │
-                       │ Says "Help me"
-                       ▼
-              🎤 SPEECH RECOGNITION
-                       │
-                       ▼
-                  🚨 SOS DETECTION
-                       │
-                       ▼
-               📍 REQUEST LOCATION
-                       │
-                       ▼
-              ┌─────────────────┐
-              │  FLASK SERVER   │
-              │                 │
-              │ Simulated GPS   │
-              │    Coordinates  │
-              └────────┬────────┘
-                       │
-                       ▼
-              📍 LATITUDE + LONGITUDE
-                       │
-                       ▼
-                🗺️ GOOGLE MAPS
-                       │
-                       ▼
-              🚨 EMERGENCY MESSAGE
-                       │
-                       ▼
-                  💻 TERMINAL
-🛠️ Tech Stack
-Technology	Purpose
-Python	Main programming language
-Tkinter	Graphical User Interface
-SpeechRecognition	Voice command detection
-Flask	Server/API for simulated GPS coordinates
-Requests	Communication with Flask
-Google Maps	Location visualization
-Threading	Keeps GUI responsive
-🔌 Flask API
-POST /location
+                         👤 USER
+                            │
+                            │ Says "Help me"
+                            ▼
+                   🎤 SPEECH RECOGNITION
+                            │
+                            ▼
+                       🚨 SOS DETECTION
+                            │
+                            ▼
+                     📍 REQUEST LOCATION
+                            │
+                            ▼
+                  ┌─────────────────────┐
+                  │    FLASK SERVER     │
+                  │                     │
+                  │  Simulated GPS      │
+                  │    Coordinates      │
+                  └──────────┬──────────┘
+                             │
+                             ▼
+                    📍 LATITUDE + LONGITUDE
+                             │
+                             ▼
+                       🗺️ GOOGLE MAPS
+                             │
+                             ▼
+                    🚨 EMERGENCY MESSAGE
+                             │
+                             ▼
+                        💻 TERMINAL
+```
 
-Receives the simulated GPS coordinates.
+---
 
+## 🛠️ Tech Stack
+
+```text
+🐍 Python
+    │
+    ├── 🖥️ Tkinter
+    │      └── Graphical User Interface
+    │
+    ├── 🎤 SpeechRecognition
+    │      └── Voice Command Detection
+    │
+    ├── 🌐 Flask
+    │      └── Simulated GPS Location Server
+    │
+    ├── 🔗 Requests
+    │      └── Communication with Flask Server
+    │
+    ├── 🗺️ Google Maps
+    │      └── Location Visualization
+    │
+    └── 🧵 Threading
+           └── Keeps GUI Responsive
+```
+
+---
+
+## 🔌 Flask API
+
+### `POST /location`
+
+Receives the **simulated GPS coordinates**.
+
+```json
 {
     "latitude": 18.5230,
     "longitude": 73.8590
 }
+```
 
 The Flask server stores the latest latitude and longitude.
 
-GET /latest-location
+```text
+GPS / Simulator
+       │
+       │ POST /location
+       ▼
+Flask Server
+       │
+       ▼
+Stores Latest
+Latitude + Longitude
+```
+
+### `GET /latest-location`
 
 The SOS application uses this endpoint to retrieve the latest coordinates.
 
+```text
 SOS Application
        │
        │ GET /latest-location
@@ -97,19 +135,25 @@ Latest Latitude + Longitude
        │
        ▼
 SOS Application
-🧠 Pseudocode
+```
+
+---
+
+## 🧠 Pseudocode
+
+```text
 START
   │
   ▼
-Listen for user's voice
+🎤 Listen for User's Voice
   │
   ▼
 Convert Speech → Text
   │
   ▼
-Is "help me" detected?
+Is "Help me" Detected?
   │
-  ├── NO ──→ Continue Listening
+  ├──────── NO ────────► Continue Listening
   │
   ▼ YES
 Request Latest Location
@@ -117,7 +161,7 @@ Request Latest Location
   ▼
 Is Location Available?
   │
-  ├── NO ──→ Show "GPS Unavailable"
+  ├──────── NO ────────► GPS Unavailable
   │
   ▼ YES
 Get Latitude + Longitude
@@ -133,72 +177,248 @@ Print Message in Terminal
   │
   ▼
 END
-⚠️ Current Limitations
-📍 GPS Module
+```
 
-A physical GPS module was not available during development.
+---
 
-Therefore, the current prototype uses simulated latitude and longitude.
+## ⚠️ Current Limitations
 
-The Flask API is already designed to receive latitude and longitude.
+### 📍 GPS Module
 
-In the future:
+A **physical GPS module was not available** during development.
 
+Therefore, the current prototype uses **simulated latitude and longitude**.
+
+The Flask API is designed to receive latitude and longitude, so the simulated
+coordinate source can be replaced with a real GPS module in the future.
+
+### Current Prototype
+
+```text
 Simulated Coordinates
-        ↓
-   Replace With
-        ↓
-   Real GPS Module
-        ↓
-Latitude + Longitude
-        ↓
+        │
+        ▼
    Flask Server
+        │
+        ▼
+Latitude + Longitude
+        │
+        ▼
+ SOS Application
+```
 
-The real GPS module can replace the simulated coordinate source without
-changing the main SOS logic.
+### Future GPS Integration
 
-📱 Twilio
+```text
+Physical GPS Module
+        │
+        ▼
+Real Latitude + Longitude
+        │
+        ▼
+   Flask Server
+        │
+        ▼
+ SOS Application
+        │
+        ▼
+   Google Maps
+```
 
-The original project used Twilio for SMS alerts.
+The real GPS module can therefore replace the simulated coordinate source
+without changing the main SOS logic.
+
+---
+
+## 📱 Twilio
+
+The original project used **Twilio for sending SMS emergency alerts**.
 
 Due to current Twilio service/account limitations, SMS was replaced with
-terminal output for the prototype.
+**terminal output** for the prototype.
 
-In the future:
+The emergency message generation remains the same.
 
+### Current Prototype
+
+```text
+SOS Trigger
+     │
+     ▼
 Emergency Message
-        ↓
-SMS / WhatsApp / Push Notification
-🔮 Future Improvements
-📍 Integrate a physical GPS module
-📱 Add SMS / WhatsApp / Push notifications
-🔄 Implement continuous location tracking
-🔐 Add API authentication
-🔒 Use HTTPS for secure communication
-☁️ Deploy Flask using a production server
-📂 Project Structure
+     │
+     ▼
+💻 Terminal Output
+```
+
+### Future Notification System
+
+```text
+SOS Trigger
+     │
+     ▼
+Emergency Message
+     │
+     ▼
+📱 SMS / WhatsApp / Push Notification
+```
+
+---
+
+## 🔮 Future Improvements
+
+```text
+Current Prototype
+       │
+       ├── 📍 Simulated GPS
+       │          │
+       │          ▼
+       │     Real GPS Module
+       │
+       ├── 💻 Terminal Output
+       │          │
+       │          ▼
+       │     SMS / WhatsApp /
+       │     Push Notification
+       │
+       ├── 📍 Latest Location
+       │          │
+       │          ▼
+       │     Continuous Tracking
+       │
+       └── 🔐 Basic API
+                  │
+                  ▼
+             Authentication
+                  +
+                HTTPS
+```
+
+---
+
+## 📂 Project Structure
+
+```text
 SOS-Voice-Alert-System/
 │
 ├── gps_reciever.py
-│   └── Flask server for simulated GPS coordinates
+│   └── Flask server
+│       └── Handles simulated GPS coordinates
 │
 └── sos_alert.py
-    └── Voice-based SOS application
-🎯 Project Goal
+    └── SOS application
+        ├── Voice detection
+        ├── Location retrieval
+        ├── Google Maps link
+        └── Emergency message
+```
+
+---
+
+## 🎯 Project Goal
 
 The project combines:
 
+```text
 🎤 Voice Recognition
+        │
         +
+        ▼
 📍 Location Data
+        │
         +
+        ▼
 🌐 REST API
+        │
         +
+        ▼
 🗺️ Google Maps
+        │
         +
+        ▼
 🚨 Emergency Notification
+        │
+        ▼
+     SOS System
+```
 
-to create a simple and fast SOS system.
+The goal is to create a **simple and fast SOS mechanism** that combines
+voice recognition with location sharing.
 
 The current prototype demonstrates the complete software workflow using
-simulated GPS data.
+**simulated GPS data**.
+
+---
+
+# ⭐ Last-Minute Interview Revision
+
+### 1️⃣ Problem
+
+**Emergency situations require a quick way to request help and share location.**
+
+### 2️⃣ Trigger
+
+```text
+User says → "Help me"
+```
+
+### 3️⃣ Speech Recognition
+
+```text
+Voice
+  ↓
+SpeechRecognition
+  ↓
+Text
+```
+
+### 4️⃣ Flask
+
+**Acts as the communication layer for the simulated GPS coordinates.**
+
+### 5️⃣ POST `/location`
+
+```text
+Send / Update Location
+```
+
+### 6️⃣ GET `/latest-location`
+
+```text
+Retrieve Latest Location
+```
+
+### 7️⃣ Google Maps
+
+```text
+Latitude + Longitude
+        ↓
+Google Maps Link
+```
+
+### 8️⃣ Current Prototype
+
+```text
+Simulated GPS
+      +
+Terminal Notification
+```
+
+### 9️⃣ Future Version
+
+```text
+Real GPS Module
+      +
+SMS / Notification Service
+```
+
+---
+
+## 🎤 One-Line Interview Explanation
+
+> **"I built a Python voice-activated SOS prototype where saying 'Help me'
+> triggers a request to a Flask server for the latest simulated GPS
+> coordinates, which are converted into a Google Maps link and included
+> in an emergency message. The simulated GPS and terminal notification
+> can later be replaced with real GPS hardware and an emergency
+> notification service."**
